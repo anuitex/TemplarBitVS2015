@@ -46,6 +46,7 @@ namespace TemplarBit.UnitTests
             }
             catch (Exception ex)
             {
+                Assert.Fail();
                 _event.Set();
             }
         }
@@ -75,6 +76,7 @@ namespace TemplarBit.UnitTests
             }
             catch (Exception ex)
             {
+                Assert.Fail();
                 _event.Set();
             }
         }
@@ -103,6 +105,7 @@ namespace TemplarBit.UnitTests
             }
             catch (Exception ex)
             {
+                Assert.Fail();
                 _event.Set();
             }
         }
@@ -132,6 +135,7 @@ namespace TemplarBit.UnitTests
             }
             catch (Exception ex)
             {
+                Assert.Fail();
                 _event.Set();
             }
         }
@@ -161,6 +165,7 @@ namespace TemplarBit.UnitTests
             }
             catch (Exception ex)
             {
+                Assert.Fail();
                 _event.Set();
             }
         }
@@ -190,6 +195,7 @@ namespace TemplarBit.UnitTests
             }
             catch (Exception ex)
             {
+                Assert.Fail();
                 _event.Set();
             }
         }
