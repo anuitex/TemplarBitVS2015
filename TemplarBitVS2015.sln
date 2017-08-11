@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplarBit.Core", "TemplarBit.Core\TemplarBit.Core.csproj", "{F8313346-1AF5-4355-9E40-2928319A6774}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplarBit.UnitTests", "TemplarBit.UnitTests\TemplarBit.UnitTests.csproj", "{0EF5A6FC-9253-4591-9CAC-26EFAA38EA2B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8313346-1AF5-4355-9E40-2928319A6774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8313346-1AF5-4355-9E40-2928319A6774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8313346-1AF5-4355-9E40-2928319A6774}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8313346-1AF5-4355-9E40-2928319A6774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EF5A6FC-9253-4591-9CAC-26EFAA38EA2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EF5A6FC-9253-4591-9CAC-26EFAA38EA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EF5A6FC-9253-4591-9CAC-26EFAA38EA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EF5A6FC-9253-4591-9CAC-26EFAA38EA2B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
