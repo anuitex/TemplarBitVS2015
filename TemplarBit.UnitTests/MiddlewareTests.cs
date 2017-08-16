@@ -25,8 +25,9 @@ namespace TemplarBit.UnitTests
             {
                 _event.WaitOne();
                 _event.Reset();
-                TestLogger.Logs.Clear();
+                var logger = new TestLogger();
                 var startup = new Startup();
+                startup.Logger = logger;
                 startup.TemplarBitApiToken = "b46b86317e73d423ba8a802f33837b46ce0ba64a0bca55dcba5bcf4bc5cd4a01";
                 startup.TemplarBitPropertyId = "cccb512f-0aa0-4931-89f4-76cda8602a56";
                 startup.TemplarBitApiUrl = "https://api.templarbit.com/v1";
@@ -35,6 +36,7 @@ namespace TemplarBit.UnitTests
                          {
                              services.AddSingleton<Startup>(startup);
                          });
+
                 var server = new TestServer(builder.UseStartup<Startup>());
                 var client = server.CreateClient();
                 var response = await client.GetAsync("/");
@@ -44,7 +46,7 @@ namespace TemplarBit.UnitTests
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 // Assert
-                if (TestLogger.Logs.Count != 0)
+                if (logger.Logs.Count != 0)
                 {
                     Assert.True(false);
                 }
@@ -64,8 +66,9 @@ namespace TemplarBit.UnitTests
             {
                 _event.WaitOne();
                 _event.Reset();
-                TestLogger.Logs.Clear();
+                var logger = new TestLogger();
                 var startup = new Startup();
+                startup.Logger = logger;
                 startup.TemplarBitApiToken = "return_500";
                 startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
                 startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
@@ -76,18 +79,18 @@ namespace TemplarBit.UnitTests
                          });
                 var server = new TestServer(builder.UseStartup<Startup>());
                 var client = server.CreateClient();
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(2000);
                 // Act
                 var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
 
 
                 // Assert
-                if (TestLogger.Logs.Count == 0)
+                if (logger.Logs.Count == 0)
                 {
                     Assert.True(false);
                 }
-                Assert.Equal("\nTemplarBitMiddlewareError: Fetch failed, returned status InternalServerError\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.Equal("\nTemplarBitMiddlewareError: Fetch failed, returned status InternalServerError\n", logger.Logs[logger.Logs.Count - 1]);
                 Assert.True(true);
                 _event.Set();
             }
@@ -104,8 +107,9 @@ namespace TemplarBit.UnitTests
             {
                 _event.WaitOne();
                 _event.Reset();
-                TestLogger.Logs.Clear();
+                var logger = new TestLogger();
                 var startup = new Startup();
+                startup.Logger = logger;
                 startup.TemplarBitApiToken = "return_valid";
                 startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
                 startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
@@ -117,12 +121,12 @@ namespace TemplarBit.UnitTests
                           });
                 var server = new TestServer(builder.UseStartup<Startup>());
                 var client = server.CreateClient();
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(3000);
                 var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
-                if (TestLogger.Logs.Count != 0)
+                if (logger.Logs.Count != 0)
                 {
-                    Assert.True(false, TestLogger.Logs[0]);
+                    Assert.True(false, logger.Logs[0]);
                 }
                 Assert.True(true);
                 _event.Set();
@@ -140,8 +144,9 @@ namespace TemplarBit.UnitTests
             {
                 _event.WaitOne();
                 _event.Reset();
-                TestLogger.Logs.Clear();
+                var logger = new TestLogger();
                 var startup = new Startup();
+                startup.Logger = logger;
                 startup.TemplarBitApiToken = "return_invalid";
                 startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
                 startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
@@ -152,15 +157,15 @@ namespace TemplarBit.UnitTests
                           });
                 var server = new TestServer(builder.UseStartup<Startup>());
                 var client = server.CreateClient();
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(4000);
                 var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
                 Thread.Sleep(_timeOut);
-                if (TestLogger.Logs.Count == 0)
+                if (logger.Logs.Count == 0)
                 {
                     Assert.True(false);
                 }
-                Assert.Equal("\nTemplarBitMiddlewareError: Fetch successful, but Content-Security-Policy was empty.\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.Equal("\nTemplarBitMiddlewareError: Fetch successful, but Content-Security-Policy was empty.\n", logger.Logs[logger.Logs.Count - 1]);
                 Assert.True(true);
                 _event.Set();
             }
@@ -177,8 +182,9 @@ namespace TemplarBit.UnitTests
             {
                 _event.WaitOne();
                 _event.Reset();
-                TestLogger.Logs.Clear();
+                var logger = new TestLogger();
                 var startup = new Startup();
+                startup.Logger = logger;
                 startup.TemplarBitApiToken = "return_error";
                 startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
                 startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
@@ -193,11 +199,11 @@ namespace TemplarBit.UnitTests
                 var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
                 Thread.Sleep(_timeOut);
-                if (TestLogger.Logs.Count == 0)
+                if (logger.Logs.Count == 0)
                 {
                     Assert.True(false);
                 }
-                Assert.True(TestLogger.Logs[TestLogger.Logs.Count - 1].StartsWith("\nTemplarBitMiddlewareError: Fetch failed: "));
+                Assert.True(logger.Logs[logger.Logs.Count - 1].StartsWith("\nTemplarBitMiddlewareError: Fetch failed: "));
                 _event.Set();
             }
             catch (Exception ex)
@@ -214,8 +220,9 @@ namespace TemplarBit.UnitTests
 
                 _event.WaitOne();
                 _event.Reset();
-                TestLogger.Logs.Clear();
+                var logger = new TestLogger();
                 var startup = new Startup();
+                startup.Logger = logger;
                 startup.TemplarBitApiToken = "return_401";
                 startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
                 startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
@@ -226,15 +233,15 @@ namespace TemplarBit.UnitTests
                         });
                 var server = new TestServer(builder.UseStartup<Startup>());
                 var client = server.CreateClient();
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(6000);
                 var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
                 Thread.Sleep(_timeOut);
-                if (TestLogger.Logs.Count == 0)
+                if (logger.Logs.Count == 0)
                 {
                     Assert.True(false);
                 }
-                Assert.Equal("\nTemplarBitMiddlewareError: invalid templarbit_api_token and/or templarbit_property_id\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.Equal("\nTemplarBitMiddlewareError: invalid templarbit_api_token and/or templarbit_property_id\n", logger.Logs[logger.Logs.Count - 1]);
                 Assert.True(true);
                 _event.Set();
             }
