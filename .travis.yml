@@ -2,7 +2,7 @@ language: csharp
 solution: TemplarBitVS2015.sln
 install:
   - nuget restore TemplarBitVS2015.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+  - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release TemplarBitVS2015.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./TemplarBit.UnitTests/bin/Release/TemplarBit.UnitTests.dll
+  - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./TemplarBit.UnitTests/bin/Release/TemplarBit.UnitTests.dll
