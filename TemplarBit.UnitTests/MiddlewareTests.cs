@@ -12,15 +12,13 @@ namespace TemplarBit.UnitTests
 {
     public class MiddlewareTests
     {
-        private ManualResetEvent _event = new ManualResetEvent(false);
         private readonly int _timeOut = 0;
         public MiddlewareTests()
         {
-            _event.Set();
 
         }
         [Fact]
-        public async void ResponseTest()
+        public void ResponseTest()
         {
             var result = true;
             var manualEvent = new ManualResetEvent(false);
@@ -29,8 +27,6 @@ namespace TemplarBit.UnitTests
             {
                 var thread = new Thread(async () =>
                 {
-                    _event.WaitOne();
-                    _event.Reset();
                     var logger = new TestLogger();
                     var startup = new Startup();
                     startup.Logger = logger;
@@ -57,7 +53,6 @@ namespace TemplarBit.UnitTests
                         Assert.True(false);
                     }
                     Assert.True(true);
-                    _event.Set();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -69,7 +64,6 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
-                _event.Set();
             }
         }
         [Fact]
@@ -82,8 +76,6 @@ namespace TemplarBit.UnitTests
             {
                 var thread = new Thread(async () =>
                 {
-                    _event.WaitOne();
-                    _event.Reset();
                     var logger = new TestLogger();
                     var startup = new Startup();
                     startup.Logger = logger;
@@ -107,7 +99,6 @@ namespace TemplarBit.UnitTests
                     {
                         result = false;
                     }
-                    _event.Set();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -118,7 +109,6 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
-                _event.Set();
             }
         }
         [Fact]
@@ -131,8 +121,6 @@ namespace TemplarBit.UnitTests
             {
                 var thread = new Thread(async () =>
                 {
-                    _event.WaitOne();
-                    _event.Reset();
                     var logger = new TestLogger();
                     var startup = new Startup();
                     startup.Logger = logger;
@@ -155,7 +143,6 @@ namespace TemplarBit.UnitTests
                         Assert.True(false, logger.Logs[0]);
                     }
                     Assert.True(true);
-                    _event.Set();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -166,7 +153,6 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
-                _event.Set();
             }
         }
         [Fact]
@@ -179,8 +165,6 @@ namespace TemplarBit.UnitTests
             {
                 var thread = new Thread(async () =>
                 {
-                    _event.WaitOne();
-                    _event.Reset();
                     var logger = new TestLogger();
                     var startup = new Startup();
                     startup.Logger = logger;
@@ -204,7 +188,6 @@ namespace TemplarBit.UnitTests
                     }
                     Assert.Equal("\nTemplarBitMiddlewareError: Fetch successful, but Content-Security-Policy was empty.\n", logger.Logs[logger.Logs.Count - 1]);
                     Assert.True(true);
-                    _event.Set();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -215,7 +198,6 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
-                _event.Set();
             }
         }
         [Fact]
@@ -228,8 +210,6 @@ namespace TemplarBit.UnitTests
             {
                 var thread = new Thread(async () =>
                 {
-                    _event.WaitOne();
-                    _event.Reset();
                     var logger = new TestLogger();
                     var startup = new Startup();
                     startup.Logger = logger;
@@ -251,7 +231,7 @@ namespace TemplarBit.UnitTests
                         Assert.True(false);
                     }
                     Assert.True(logger.Logs[logger.Logs.Count - 1].StartsWith("\nTemplarBitMiddlewareError: Fetch failed: "));
-                    _event.Set();
+                    
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -262,7 +242,6 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
-                _event.Set();
             }
         }
         [Fact]
@@ -275,8 +254,6 @@ namespace TemplarBit.UnitTests
             {
                 var thread = new Thread(async () =>
                 {
-                    _event.WaitOne();
-                    _event.Reset();
                     var logger = new TestLogger();
                     var startup = new Startup();
                     startup.Logger = logger;
@@ -300,7 +277,6 @@ namespace TemplarBit.UnitTests
                     }
                     Assert.Equal("\nTemplarBitMiddlewareError: invalid templarbit_api_token and/or templarbit_property_id\n", logger.Logs[logger.Logs.Count - 1]);
                     Assert.True(true);
-                    _event.Set();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -311,7 +287,6 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
-                _event.Set();
             }
         }
     }
