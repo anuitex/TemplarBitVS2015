@@ -20,8 +20,11 @@ namespace TemplarBit.UnitTests
 
         }
         [Fact]
-        public void ResponseTest()
+        public async void ResponseTest()
         {
+            var result = true;
+            var manualEvent = new ManualResetEvent(false);
+            manualEvent.Reset();
             try
             {
                 var thread = new Thread(async () =>
@@ -55,8 +58,12 @@ namespace TemplarBit.UnitTests
                     }
                     Assert.True(true);
                     _event.Set();
+                    manualEvent.Set();
                 });
                 thread.Start();
+                manualEvent.WaitOne();
+                thread.Abort();
+                Assert.True(result);
 
             }
             catch (Exception ex)
@@ -68,6 +75,9 @@ namespace TemplarBit.UnitTests
         [Fact]
         public void return_500ResponseTest()
         {
+            var result = true;
+            var manualEvent = new ManualResetEvent(false);
+            manualEvent.Reset();
             try
             {
                 var thread = new Thread(async () =>
@@ -87,22 +97,23 @@ namespace TemplarBit.UnitTests
                              });
                     var server = new TestServer(builder.UseStartup<Startup>());
                     var client = server.CreateClient();
-                    System.Threading.Thread.Sleep(2000);
-                    // Act
                     var response = await client.GetAsync("/");
                     response.EnsureSuccessStatusCode();
-
-
-                    // Assert
-                    if (logger.Logs.Count == 0)
+                    if (logger.Logs.Count != 0)
                     {
-                        Assert.True(false);
+                        result = false;
                     }
-                    Assert.Equal("\nTemplarBitMiddlewareError: Fetch failed, returned status InternalServerError\n", logger.Logs[logger.Logs.Count - 1]);
-                    Assert.True(true);
+                    if (logger.Logs.Count > 0 && "\nTemplarBitMiddlewareError: Fetch failed, returned status InternalServerError\n" != logger.Logs[logger.Logs.Count - 1])
+                    {
+                        result = false;
+                    }
                     _event.Set();
+                    manualEvent.Set();
                 });
                 thread.Start();
+                manualEvent.WaitOne();
+                thread.Abort();
+                Assert.True(result);
             }
             catch (Exception ex)
             {
@@ -113,6 +124,9 @@ namespace TemplarBit.UnitTests
         [Fact]
         public void return_validResponseTest()
         {
+            var result = true;
+            var manualEvent = new ManualResetEvent(false);
+            manualEvent.Reset();
             try
             {
                 var thread = new Thread(async () =>
@@ -142,8 +156,12 @@ namespace TemplarBit.UnitTests
                     }
                     Assert.True(true);
                     _event.Set();
+                    manualEvent.Set();
                 });
                 thread.Start();
+                manualEvent.WaitOne();
+                thread.Abort();
+                Assert.True(result);
             }
             catch (Exception ex)
             {
@@ -154,6 +172,9 @@ namespace TemplarBit.UnitTests
         [Fact]
         public void return_invalidResponseTest()
         {
+            var result = true;
+            var manualEvent = new ManualResetEvent(false);
+            manualEvent.Reset();
             try
             {
                 var thread = new Thread(async () =>
@@ -184,8 +205,12 @@ namespace TemplarBit.UnitTests
                     Assert.Equal("\nTemplarBitMiddlewareError: Fetch successful, but Content-Security-Policy was empty.\n", logger.Logs[logger.Logs.Count - 1]);
                     Assert.True(true);
                     _event.Set();
+                    manualEvent.Set();
                 });
                 thread.Start();
+                manualEvent.WaitOne();
+                thread.Abort();
+                Assert.True(result);
             }
             catch (Exception ex)
             {
@@ -196,6 +221,9 @@ namespace TemplarBit.UnitTests
         [Fact]
         public void return_errorResponseTest()
         {
+            var result = true;
+            var manualEvent = new ManualResetEvent(false);
+            manualEvent.Reset();
             try
             {
                 var thread = new Thread(async () =>
@@ -224,8 +252,12 @@ namespace TemplarBit.UnitTests
                     }
                     Assert.True(logger.Logs[logger.Logs.Count - 1].StartsWith("\nTemplarBitMiddlewareError: Fetch failed: "));
                     _event.Set();
+                    manualEvent.Set();
                 });
                 thread.Start();
+                manualEvent.WaitOne();
+                thread.Abort();
+                Assert.True(result);
             }
             catch (Exception ex)
             {
@@ -236,6 +268,9 @@ namespace TemplarBit.UnitTests
         [Fact]
         public void return_401ResponseTest()
         {
+            var result = true;
+            var manualEvent = new ManualResetEvent(false);
+            manualEvent.Reset();
             try
             {
                 var thread = new Thread(async () =>
@@ -266,8 +301,12 @@ namespace TemplarBit.UnitTests
                     Assert.Equal("\nTemplarBitMiddlewareError: invalid templarbit_api_token and/or templarbit_property_id\n", logger.Logs[logger.Logs.Count - 1]);
                     Assert.True(true);
                     _event.Set();
+                    manualEvent.Set();
                 });
                 thread.Start();
+                manualEvent.WaitOne();
+                thread.Abort();
+                Assert.True(result);
             }
             catch (Exception ex)
             {
