@@ -107,7 +107,7 @@ namespace TemplarBit.Core
 
         }
 
-        private async Task Run(HttpContext context)
+        private void Run(HttpContext context)
         {
             if (!string.IsNullOrEmpty(contentSecurityPolicy))
             {
