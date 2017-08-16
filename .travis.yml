@@ -5,4 +5,4 @@ install:
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release TemplarBitVS2015.sln
-  - travis_wait 30 mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./TemplarBit.UnitTests/bin/Release/TemplarBit.UnitTests.dll
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./TemplarBit.UnitTests/bin/Release/TemplarBit.UnitTests.dll
