@@ -12,6 +12,7 @@ namespace TemplarBit.Core
 {
     public class TemplarBitMiddleware
     {
+        public static bool Digest { get; set; } = true;
         private const int MILLISECONDS_IN_SECOND = 1000;
         private readonly RequestDelegate _next;
         private readonly TemplarBitMiddlewareModel _model;
@@ -33,7 +34,7 @@ namespace TemplarBit.Core
 
         private async Task StartLoop()
         {
-            while (true)
+            while (Digest)
             {
                 try
                 {

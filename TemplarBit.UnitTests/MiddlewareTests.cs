@@ -7,6 +7,7 @@ using System.Threading;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
+using TemplarBit.Core;
 
 namespace TemplarBit.UnitTests
 {
@@ -16,6 +17,15 @@ namespace TemplarBit.UnitTests
         public MiddlewareTests()
         {
 
+        }
+        private static int endTestCount = 0;
+        private void IsEnd()
+        {
+            endTestCount++;
+            if (endTestCount == 6)
+            {
+                TemplarBitMiddleware.Digest = false;
+            }
         }
         [Fact]
         public void ResponseTest()
@@ -53,17 +63,21 @@ namespace TemplarBit.UnitTests
                         Assert.True(false);
                     }
                     Assert.True(true);
+                    server.Dispose();
                     manualEvent.Set();
                 });
                 thread.Start();
                 manualEvent.WaitOne();
                 thread.Abort();
                 Assert.True(result);
-
             }
             catch (Exception ex)
             {
                 Assert.True(false);
+            }
+            finally
+            {
+                IsEnd();
             }
         }
         [Fact]
@@ -99,6 +113,7 @@ namespace TemplarBit.UnitTests
                     {
                         result = false;
                     }
+                    server.Dispose();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -109,6 +124,10 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
+            }
+            finally
+            {
+                IsEnd();
             }
         }
         [Fact]
@@ -143,6 +162,7 @@ namespace TemplarBit.UnitTests
                         Assert.True(false, logger.Logs[0]);
                     }
                     Assert.True(true);
+                    server.Dispose();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -153,6 +173,10 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
+            }
+            finally
+            {
+                IsEnd();
             }
         }
         [Fact]
@@ -188,6 +212,7 @@ namespace TemplarBit.UnitTests
                     }
                     Assert.Equal("\nTemplarBitMiddlewareError: Fetch successful, but Content-Security-Policy was empty.\n", logger.Logs[logger.Logs.Count - 1]);
                     Assert.True(true);
+                    server.Dispose();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -198,6 +223,10 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
+            }
+            finally
+            {
+                IsEnd();
             }
         }
         [Fact]
@@ -231,7 +260,7 @@ namespace TemplarBit.UnitTests
                         Assert.True(false);
                     }
                     Assert.True(logger.Logs[logger.Logs.Count - 1].StartsWith("\nTemplarBitMiddlewareError: Fetch failed: "));
-                    
+                    server.Dispose();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -242,6 +271,10 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
+            }
+            finally
+            {
+                IsEnd();
             }
         }
         [Fact]
@@ -277,6 +310,7 @@ namespace TemplarBit.UnitTests
                     }
                     Assert.Equal("\nTemplarBitMiddlewareError: invalid templarbit_api_token and/or templarbit_property_id\n", logger.Logs[logger.Logs.Count - 1]);
                     Assert.True(true);
+                    server.Dispose();
                     manualEvent.Set();
                 });
                 thread.Start();
@@ -287,6 +321,10 @@ namespace TemplarBit.UnitTests
             catch (Exception ex)
             {
                 Assert.True(false);
+            }
+            finally
+            {
+                IsEnd();
             }
         }
     }
