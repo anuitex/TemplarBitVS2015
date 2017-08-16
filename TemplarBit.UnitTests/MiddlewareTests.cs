@@ -6,14 +6,14 @@ using System.Net.Http;
 using System.Threading;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 
 namespace TemplarBit.UnitTests
 {
     public class MiddlewareTests
     {
         private ManualResetEvent _event = new ManualResetEvent(false);
-        private TestServer _server;
-        private HttpClient _client;
+        private readonly int _timeOut = 0;
         public MiddlewareTests()
         {
             _event.Set();
@@ -35,19 +35,16 @@ namespace TemplarBit.UnitTests
                          {
                              services.AddSingleton<Startup>(startup);
                          });
-                _server = new TestServer(builder.UseStartup<Startup>());
-                _client = _server.CreateClient();
-                var response = await _client.GetAsync("/");
-                response.EnsureSuccessStatusCode();
+                var server = new TestServer(builder.UseStartup<Startup>());
+                // Act
+                var requestMessage = new HttpRequestMessage(new HttpMethod("GET"), "/old/");
+                var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
-                System.Threading.Thread.Sleep(1000);
-                var responseString = await response.Content.ReadAsStringAsync();
-
+                // Assert
                 if (TestLogger.Logs.Count != 0)
                 {
                     Assert.True(false);
                 }
-                Assert.Equal("Hello World!", responseString);
                 Assert.True(true);
                 _event.Set();
             }
@@ -74,12 +71,15 @@ namespace TemplarBit.UnitTests
                          {
                              services.AddSingleton<Startup>(startup);
                          });
-                _server = new TestServer(builder.UseStartup<Startup>());
-                _client = _server.CreateClient();
+                var server = new TestServer(builder.UseStartup<Startup>());
+                var client = server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
-                var response = await _client.GetAsync("/");
+                // Act
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
 
+
+                // Assert
                 if (TestLogger.Logs.Count == 0)
                 {
                     Assert.True(false);
@@ -112,12 +112,11 @@ namespace TemplarBit.UnitTests
                           {
                               services.AddSingleton<Startup>(startup);
                           });
-                _server = new TestServer(builder.UseStartup<Startup>());
-                _client = _server.CreateClient();
+                var server = new TestServer(builder.UseStartup<Startup>());
+                var client = server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
-                var response = await _client.GetAsync("/");
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
-
                 if (TestLogger.Logs.Count != 0)
                 {
                     Assert.True(false, TestLogger.Logs[0]);
@@ -148,12 +147,12 @@ namespace TemplarBit.UnitTests
                           {
                               services.AddSingleton<Startup>(startup);
                           });
-                _server = new TestServer(builder.UseStartup<Startup>());
-                _client = _server.CreateClient();
+                var server = new TestServer(builder.UseStartup<Startup>());
+                var client = server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
-                var response = await _client.GetAsync("/");
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
-
+                Thread.Sleep(_timeOut);
                 if (TestLogger.Logs.Count == 0)
                 {
                     Assert.True(false);
@@ -185,12 +184,12 @@ namespace TemplarBit.UnitTests
                          {
                              services.AddSingleton<Startup>(startup);
                          });
-                _server = new TestServer(builder.UseStartup<Startup>());
-                _client = _server.CreateClient();
+                var server = new TestServer(builder.UseStartup<Startup>());
+                var client = server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
-                var response = await _client.GetAsync("/");
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
-
+                Thread.Sleep(_timeOut);
                 if (TestLogger.Logs.Count == 0)
                 {
                     Assert.True(false);
@@ -209,6 +208,7 @@ namespace TemplarBit.UnitTests
         {
             try
             {
+
                 _event.WaitOne();
                 _event.Reset();
                 TestLogger.Logs.Clear();
@@ -221,12 +221,12 @@ namespace TemplarBit.UnitTests
                         {
                             services.AddSingleton<Startup>(startup);
                         });
-                _server = new TestServer(builder.UseStartup<Startup>());
-                _client = _server.CreateClient();
+                var server = new TestServer(builder.UseStartup<Startup>());
+                var client = server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
-                var response = await _client.GetAsync("/");
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
-
+                Thread.Sleep(_timeOut);
                 if (TestLogger.Logs.Count == 0)
                 {
                     Assert.True(false);
