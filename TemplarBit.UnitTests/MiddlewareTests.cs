@@ -1,14 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
 using System.Net.Http;
 using System.Threading;
+using Xunit;
 
 namespace TemplarBit.UnitTests
 {
-    [TestFixture]
     public class MiddlewareTests
     {
         private ManualResetEvent _event = new ManualResetEvent(false);
@@ -18,7 +17,7 @@ namespace TemplarBit.UnitTests
         {
             _event.Set();
         }
-        [Test]
+        [Fact]
         public async Task ResponseTest()
         {
             try
@@ -39,18 +38,19 @@ namespace TemplarBit.UnitTests
 
                 if (TestLogger.Logs.Count != 0)
                 {
-                    Assert.Fail();
+                    Assert.True(false);
                 }
-                Assert.AreEqual("Hello World!", responseString);
+                Assert.Equal("Hello World!", responseString);
+                Assert.True(true);
                 _event.Set();
             }
             catch (Exception ex)
             {
-                Assert.Fail();
+                Assert.True(false);
                 _event.Set();
             }
         }
-        [Test]
+        [Fact]
         public async Task return_500ResponseTest()
         {
             try
@@ -69,18 +69,19 @@ namespace TemplarBit.UnitTests
 
                 if (TestLogger.Logs.Count == 0)
                 {
-                    Assert.Fail();
+                    Assert.True(false);
                 }
-                Assert.AreEqual("\nTemplarBitMiddlewareError: Fetch failed, returned status InternalServerError\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.Equal("\nTemplarBitMiddlewareError: Fetch failed, returned status InternalServerError\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.True(true);
                 _event.Set();
             }
             catch (Exception ex)
             {
-                Assert.Fail();
+                Assert.True(false);
                 _event.Set();
             }
         }
-        [Test]
+        [Fact]
         public async Task return_validResponseTest()
         {
             try
@@ -99,17 +100,18 @@ namespace TemplarBit.UnitTests
 
                 if (TestLogger.Logs.Count != 0)
                 {
-                    Assert.Fail(TestLogger.Logs[0]);
+                    Assert.True(false, TestLogger.Logs[0]);
                 }
+                Assert.True(true);
                 _event.Set();
             }
             catch (Exception ex)
             {
-                Assert.Fail();
+                Assert.True(false);
                 _event.Set();
             }
         }
-        [Test]
+        [Fact]
         public async Task return_invalidResponseTest()
         {
             try
@@ -128,18 +130,19 @@ namespace TemplarBit.UnitTests
 
                 if (TestLogger.Logs.Count == 0)
                 {
-                    Assert.Fail();
+                    Assert.True(false);
                 }
-                Assert.AreEqual("\nTemplarBitMiddlewareError: Fetch successful, but Content-Security-Policy was empty.\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.Equal("\nTemplarBitMiddlewareError: Fetch successful, but Content-Security-Policy was empty.\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.True(true);
                 _event.Set();
             }
             catch (Exception ex)
             {
-                Assert.Fail();
+                Assert.True(false);
                 _event.Set();
             }
         }
-        [Test]
+        [Fact]
         public async Task return_errorResponseTest()
         {
             try
@@ -158,18 +161,18 @@ namespace TemplarBit.UnitTests
 
                 if (TestLogger.Logs.Count == 0)
                 {
-                    Assert.Fail();
+                    Assert.True(false);
                 }
-                Assert.IsTrue(TestLogger.Logs[TestLogger.Logs.Count - 1].StartsWith("\nTemplarBitMiddlewareError: Fetch failed: "));
+                Assert.StartsWith("\nTemplarBitMiddlewareError: Fetch failed: ", TestLogger.Logs[TestLogger.Logs.Count - 1]);
                 _event.Set();
             }
             catch (Exception ex)
             {
-                Assert.Fail();
+                Assert.True(false);
                 _event.Set();
             }
         }
-        [Test]
+        [Fact]
         public async Task return_401ResponseTest()
         {
             try
@@ -188,14 +191,15 @@ namespace TemplarBit.UnitTests
 
                 if (TestLogger.Logs.Count == 0)
                 {
-                    Assert.Fail();
+                    Assert.True(false);
                 }
-                Assert.AreEqual("\nTemplarBitMiddlewareError: invalid templarbit_api_token and/or templarbit_property_id\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.Equal("\nTemplarBitMiddlewareError: invalid templarbit_api_token and/or templarbit_property_id\n", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.True(true);
                 _event.Set();
             }
             catch (Exception ex)
             {
-                Assert.Fail();
+                Assert.True(false);
                 _event.Set();
             }
         }
