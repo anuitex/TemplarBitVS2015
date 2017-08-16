@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TemplarBit.Core;
+using System.Configuration;
 
-namespace TemplarBit.UnitTests
+namespace TemplarBit.Test
 {
     public class Startup
     {
-        public string TemplarBitApiToken { get; set; }
-        public string TemplarBitPropertyId { get; set; }
-        public string TemplarBitApiUrl { get; set; } = "";
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public void ConfigureServices(IServiceCollection services)
+        {
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -24,10 +27,9 @@ namespace TemplarBit.UnitTests
 
             app.UseTemplarBit(new TemplarBitMiddlewareModel()
             {
-                TemplarBitApiToken = TemplarBitApiToken,
-                TemplarBitPropertyId = TemplarBitPropertyId,
-                TemplarBitApiUrl = TemplarBitApiUrl
-            }, new TestLogger());
+                TemplarBitApiToken = ConfigurationManager.AppSettings["TB_API_KEY"],
+                TemplarBitPropertyId = ConfigurationManager.AppSettings["TB_PROPERTY_ID"]
+            }, new Logger());
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -38,16 +40,6 @@ namespace TemplarBit.UnitTests
                 await context.Response.WriteAsync("Hello World!");
             });
         }
-        //public static void Main(string[] args)
-        //{
-        //    var host = new WebHostBuilder()
-        //        .UseKestrel()
-        //        .UseContentRoot(Directory.GetCurrentDirectory())
-        //        .UseIISIntegration()
-        //        .UseStartup<Startup>()
-        //        .Build();
 
-        //    host.Run();
-        //}
     }
 }

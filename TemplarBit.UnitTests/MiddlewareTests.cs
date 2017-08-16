@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net.Http;
 using System.Threading;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TemplarBit.UnitTests
 {
@@ -25,10 +26,16 @@ namespace TemplarBit.UnitTests
                 _event.WaitOne();
                 _event.Reset();
                 TestLogger.Logs.Clear();
-                Startup.TemplarBitApiToken = "b46b86317e73d423ba8a802f33837b46ce0ba64a0bca55dcba5bcf4bc5cd4a01";
-                Startup.TemplarBitPropertyId = "cccb512f-0aa0-4931-89f4-76cda8602a56";
-                Startup.TemplarBitApiUrl = "https://api.templarbit.com/v1";
-                _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                var startup = new Startup();
+                startup.TemplarBitApiToken = "b46b86317e73d423ba8a802f33837b46ce0ba64a0bca55dcba5bcf4bc5cd4a01";
+                startup.TemplarBitPropertyId = "cccb512f-0aa0-4931-89f4-76cda8602a56";
+                startup.TemplarBitApiUrl = "https://api.templarbit.com/v1";
+                var builder = new WebHostBuilder()
+                         .ConfigureServices(services =>
+                         {
+                             services.AddSingleton<Startup>(startup);
+                         });
+                _server = new TestServer(builder.UseStartup<Startup>());
                 _client = _server.CreateClient();
                 var response = await _client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
@@ -58,10 +65,16 @@ namespace TemplarBit.UnitTests
                 _event.WaitOne();
                 _event.Reset();
                 TestLogger.Logs.Clear();
-                Startup.TemplarBitApiToken = "return_500";
-                Startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
-                Startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
-                _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                var startup = new Startup();
+                startup.TemplarBitApiToken = "return_500";
+                startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
+                startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
+                var builder = new WebHostBuilder()
+                         .ConfigureServices(services =>
+                         {
+                             services.AddSingleton<Startup>(startup);
+                         });
+                _server = new TestServer(builder.UseStartup<Startup>());
                 _client = _server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
                 var response = await _client.GetAsync("/");
@@ -89,10 +102,17 @@ namespace TemplarBit.UnitTests
                 _event.WaitOne();
                 _event.Reset();
                 TestLogger.Logs.Clear();
-                Startup.TemplarBitApiToken = "return_valid";
-                Startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
-                Startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
-                _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                var startup = new Startup();
+                startup.TemplarBitApiToken = "return_valid";
+                startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
+                startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
+
+                var builder = new WebHostBuilder()
+                          .ConfigureServices(services =>
+                          {
+                              services.AddSingleton<Startup>(startup);
+                          });
+                _server = new TestServer(builder.UseStartup<Startup>());
                 _client = _server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
                 var response = await _client.GetAsync("/");
@@ -119,10 +139,16 @@ namespace TemplarBit.UnitTests
                 _event.WaitOne();
                 _event.Reset();
                 TestLogger.Logs.Clear();
-                Startup.TemplarBitApiToken = "return_invalid";
-                Startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
-                Startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
-                _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                var startup = new Startup();
+                startup.TemplarBitApiToken = "return_invalid";
+                startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
+                startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
+                var builder = new WebHostBuilder()
+                          .ConfigureServices(services =>
+                          {
+                              services.AddSingleton<Startup>(startup);
+                          });
+                _server = new TestServer(builder.UseStartup<Startup>());
                 _client = _server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
                 var response = await _client.GetAsync("/");
@@ -150,10 +176,16 @@ namespace TemplarBit.UnitTests
                 _event.WaitOne();
                 _event.Reset();
                 TestLogger.Logs.Clear();
-                Startup.TemplarBitApiToken = "return_error";
-                Startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
-                Startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
-                _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                var startup = new Startup();
+                startup.TemplarBitApiToken = "return_error";
+                startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
+                startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
+                var builder = new WebHostBuilder()
+                         .ConfigureServices(services =>
+                         {
+                             services.AddSingleton<Startup>(startup);
+                         });
+                _server = new TestServer(builder.UseStartup<Startup>());
                 _client = _server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
                 var response = await _client.GetAsync("/");
@@ -163,7 +195,7 @@ namespace TemplarBit.UnitTests
                 {
                     Assert.True(false);
                 }
-                Assert.True(TestLogger.Logs[TestLogger.Logs.Count - 1].StartsWith("\nTemplarbitMiddlewareError: Fetch failed: "));
+                Assert.True(TestLogger.Logs[TestLogger.Logs.Count - 1].StartsWith("\nTemplarBitMiddlewareError: Fetch failed: "));
                 _event.Set();
             }
             catch (Exception ex)
@@ -180,10 +212,16 @@ namespace TemplarBit.UnitTests
                 _event.WaitOne();
                 _event.Reset();
                 TestLogger.Logs.Clear();
-                Startup.TemplarBitApiToken = "return_401";
-                Startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
-                Startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
-                _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+                var startup = new Startup();
+                startup.TemplarBitApiToken = "return_401";
+                startup.TemplarBitPropertyId = "571f4f43-ad7a-415d-894b-1a1f234899db";
+                startup.TemplarBitApiUrl = "https://api.tb-stag-01.net/v1";
+                var builder = new WebHostBuilder()
+                        .ConfigureServices(services =>
+                        {
+                            services.AddSingleton<Startup>(startup);
+                        });
+                _server = new TestServer(builder.UseStartup<Startup>());
                 _client = _server.CreateClient();
                 System.Threading.Thread.Sleep(1000);
                 var response = await _client.GetAsync("/");
