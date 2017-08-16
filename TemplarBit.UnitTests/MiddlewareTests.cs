@@ -163,7 +163,7 @@ namespace TemplarBit.UnitTests
                 {
                     Assert.True(false);
                 }
-                Assert.StartsWith("\nTemplarBitMiddlewareError: Fetch failed: ", TestLogger.Logs[TestLogger.Logs.Count - 1]);
+                Assert.Contains("\nTemplarBitMiddlewareError: Fetch failed: ", TestLogger.Logs[TestLogger.Logs.Count - 1]);
                 _event.Set();
             }
             catch (Exception ex)
