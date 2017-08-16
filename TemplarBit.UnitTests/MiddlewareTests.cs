@@ -36,9 +36,12 @@ namespace TemplarBit.UnitTests
                              services.AddSingleton<Startup>(startup);
                          });
                 var server = new TestServer(builder.UseStartup<Startup>());
-                // Act
-                var requestMessage = new HttpRequestMessage(new HttpMethod("GET"), "/old/");
-                var responseMessage = await server.CreateClient().SendAsync(requestMessage);
+                var client = server.CreateClient();
+                var response = await client.GetAsync("/");
+                response.EnsureSuccessStatusCode();
+
+                System.Threading.Thread.Sleep(1000);
+                var responseString = await response.Content.ReadAsStringAsync();
 
                 // Assert
                 if (TestLogger.Logs.Count != 0)
